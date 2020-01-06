@@ -133,7 +133,7 @@ class FontAwesomeHelper extends Helper {
             $class .= ' ' . $options['class'];
         }
         $options = Hash::merge($options, ['class' => $class]);
-        return parent::tag('i', '', $options);
+        return $this->Html->tag('i', '', $options);
     }
 
 }
