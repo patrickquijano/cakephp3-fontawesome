@@ -3,14 +3,20 @@
 namespace FontAwesome\View\Helper;
 
 use Cake\Core\Configure;
+use Cake\Utility\Hash;
 use Cake\View\Helper;
+use Cake\View\Helper\HtmlHelper;
 
 /**
- * @property \Cake\View\Helper\HtmlHelper $Html
+ * Fontawesome Helper
+ *
+ * @property HtmlHelper $Html
  */
 class FontAwesomeHelper extends Helper {
 
     /**
+     * Default configuration
+     *
      * @var array
      */
     protected $_defaultConfig = [
@@ -25,13 +31,39 @@ class FontAwesomeHelper extends Helper {
     ];
 
     /**
+     * Helpers
+     *
      * @var array
      */
     public $helpers = ['Html'];
 
     /**
-     * @param array $options
-     * @return string|null
+     * Creates a link element for Fontawesome CSS stylesheet.
+     *
+     * ### Usage
+     *
+     * Add the stylesheet to view block "css":
+     *
+     * ```
+     * $this->Html->css(['block' => true]);
+     * ```
+     *
+     * Add the stylesheet to a custom block:
+     *
+     * ```
+     * $this->Html->css(['block' => 'layoutCss']);
+     * ```
+     *
+     * ### Options
+     *
+     * - `block` Set to true to append output to view block "css" or provide
+     *   custom block name.
+     * - `plugin` False value will prevent parsing path as a plugin
+     * - `rel` Defaults to 'stylesheet'. If equal to 'import' the stylesheet will be imported.
+     * - `fullBase` If true the URL will get a full address for the css file.
+     *
+     * @param array $options Array of options and HTML arguments.
+     * @return string|null CSS `<link />` or `<style />` tag, depending on the type of link.
      */
     public function css(array $options = []) {
         if (!isset($options['block'])) {
@@ -48,8 +80,27 @@ class FontAwesomeHelper extends Helper {
     }
 
     /**
-     * @param array $options
-     * @return string|null
+     * Returns Fontawesome `<script>` tag.
+     *
+     * ### Usage
+     *
+     * Add the script file to a custom block:
+     *
+     * ```
+     * $this->Html->script('styles.js', ['block' => 'bodyScript']);
+     * ```
+     *
+     * ### Options
+     *
+     * - `block` Set to true to append output to view block "script" or provide
+     *   custom block name.
+     * - `plugin` False value will prevent parsing path as a plugin
+     * - `fullBase` If true the url will get a full address for the script file.
+     *
+     * @param string|string[] $url String or array of javascript files to include
+     * @param array $options Array of options, and html attributes see above.
+     * @return string|null String of `<script />` tags or null if block is specified in options
+     *   or if $once is true and the file has been included before.
      */
     public function script(array $options = []) {
         if (!isset($options['block'])) {
@@ -63,6 +114,26 @@ class FontAwesomeHelper extends Helper {
             $options['crossorigin'] = 'anonymous';
             return $this->Html->script($this->getConfig('script.url'), $options);
         }
+    }
+
+    /**
+     * Returns a formatted block tag <i>.
+     *
+     * ### Options
+     *
+     * - `escape` Whether or not the contents should be html_entity escaped.
+     *
+     * @param string|null $text String content that will appear inside the tag element.
+     *   If null, only a start tag will be printed
+     * @param array $options Additional HTML attributes of the <i> tag, see above.
+     * @return string The formatted tag <i> element
+     */
+    public function i($class, array $options = []) {
+        if (isset($options['class'])) {
+            $class .= ' ' . $options['class'];
+        }
+        $options = Hash::merge($options, ['class' => $class]);
+        return parent::tag('i', '', $options);
     }
 
 }
